@@ -19,7 +19,8 @@ app.use(express.static('public'));
 
 const mysql = require('mysql')
 
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const res = require('express/lib/response');
 app.use(bodyParser.urlencoded({extended: true}))
 
 // create database connection
@@ -44,6 +45,20 @@ app.get('/', (req, res) => {
         articles = result
         res.render('index', {
             articles: articles
+        })
+    })
+})
+
+// show article by this slug
+app.get('/article/:slug', (req, res) => {
+    let query = `SELECT * FROM article WHERE slug="${req.params.slug}"`
+    let article
+    con.query(query, (err, result) => {
+        if (err) throw err;
+        article = result
+        console.log(article);
+        res.render('article', {
+            article: article
         })
     })
 })
