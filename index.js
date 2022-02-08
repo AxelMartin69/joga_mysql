@@ -21,6 +21,7 @@ const mysql = require('mysql')
 
 const bodyParser = require('body-parser');
 const res = require('express/lib/response');
+const { measureMemory } = require('vm');
 app.use(bodyParser.urlencoded({extended: true}))
 
 // create database connection
@@ -51,7 +52,7 @@ app.get('/', (req, res) => {
 
 // show article by this slug
 app.get('/article/:slug', (req, res) => {
-    let query = `SELECT article.name AS name, article.published AS published, article.image AS image, author.name AS author FROM article INNER JOIN author ON article.author_id=author.id WHERE slug="${req.params.slug}"`
+    let query = `SELECT article.name AS name, article.published AS published, article.image AS image, article.author_id AS author_id, author.name AS author FROM article INNER JOIN author ON article.author_id=author.id WHERE slug="${req.params.slug}"`;
     let article
     con.query(query, (err, result) => {
         if (err) throw err;
@@ -62,6 +63,24 @@ app.get('/article/:slug', (req, res) => {
         })
     })
 })
+
+// author page
+app.get('/author/:id', (req, res) => {
+    let query = `SELECT article.name AS name, article.image AS image, article.author_id AS author_id, author.name AS author FROM article INNER JOIN author ON article.author_id=author.id WHERE author.id="${req.params.id}"`;
+    let articles = []
+    let name
+    con.query(query, (err, result) => {
+        if (err) throw err;
+        console.log(result[0].author);
+        articles = result
+        name = result[0]
+        res.render('author', {
+            articles: articles,
+            name: name
+        })
+    })
+})
+
 
 
 // app start point
