@@ -1,6 +1,7 @@
 // application packages
 const express = require('express')
 const app = express()
+const port = 3000
 
 const path = require('path')
 // add template engine
@@ -14,7 +15,7 @@ app.engine('hbs', hbs.engine({
     layoutsDir: __dirname + '/views/layouts/',
 }))
 // setup static public directory
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 const mysql = require('mysql')
 
@@ -32,4 +33,23 @@ var con = mysql.createConnection({
 con.connect(function(err) {
     if (err) throw err;
     console.log('Connected to joga_mysql db');
+})
+
+// show all articles - index page
+app.get('/', (req, res) => {
+    let query = 'SELECT * FROM article';
+    let articles = []
+    con.query(query, (err, result) => {
+        if (err) throw err;
+        articles = result
+        res.render('index', {
+            articles: articles
+        })
+    })
+})
+
+
+// app start point
+app.listen(port, () => {
+    console.log(`Now listening on port http://localhost:${port}`)
 })
