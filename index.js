@@ -28,24 +28,9 @@ const articleRoutes = require('./routes/article');
 
 // to use article routes
 app.use('/', articleRoutes);
-app.use('/article', articleRoutes)
+app.use('/article', articleRoutes);
+app.use('/autohor', articleRoutes);
 
-// author page
-app.get('/author/:id', (req, res) => {
-    let query = `SELECT article.name AS name, article.image AS image, article.author_id AS author_id, author.name AS author FROM article INNER JOIN author ON article.author_id=author.id WHERE author.id="${req.params.id}"`;
-    let articles = []
-    let name
-    con.query(query, (err, result) => {
-        if (err) throw err;
-        console.log(result[0].author);
-        articles = result
-        name = result[0]
-        res.render('author', {
-            articles: articles,
-            name: name
-        })
-    })
-})
 
 // app start point
 app.listen(port, () => {
