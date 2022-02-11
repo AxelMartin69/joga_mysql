@@ -20,7 +20,6 @@ app.use(express.static('public'));
 
 const bodyParser = require('body-parser');
 const res = require('express/lib/response');
-const { measureMemory } = require('vm');
 app.use(bodyParser.urlencoded({extended: true}))
 
 // import article route
