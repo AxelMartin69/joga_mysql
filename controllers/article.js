@@ -19,7 +19,7 @@ const getArticleBySlug = (req, res) => {
     let query = `SELECT 
                     article.name AS name, 
                     article.published AS published, 
-                    article.image AS image, 
+                    article.image AS image,
                     article.author_id AS author_id, 
                     author.name AS author 
                     FROM article INNER JOIN author ON article.author_id=author.id 
